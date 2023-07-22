@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+
+    <style>
+        #form_div{
+            width: 40vw;
+            height: 80vh;
+
+            position: absolute;
+
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            margin: auto;
+            border: 1px solid grey;
+            border-radius: 5px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            position: absolute;
+            width: 80%;
+            height: 90%;
+            border: 1px solid grey;
+            background-color: darkgray;
+
+            border-radius: 5px;
+        }
+
+        input[type="text"]{
+            width: 100%;
+            height: 25px;
+            border-radius: 10px;
+            border: 0;
+        }
+
+        input[type="email"]{
+            width: 100%;
+            height: 25px;
+            border-radius: 10px;
+            border: 0;
+        }
+
+        input[type="submit"]{
+            width: 80px;
+            height: 30px;
+            background-color: mediumpurple;
+            border-radius: 10px;
+            border: 1px solid rebeccapurple;
+        }
+
+        input[type="reset"]{
+            width: 80px;
+            height: 30px;
+            background-color: darkgray;
+            border-radius: 10px;
+            border: 1px solid grey;
+        }
+
+        @media screen and (max-width: 720px) {
+            #form_div {
+                width: 80vw;
+                height: 70vh;
+            }
+        }
+
+
+
+    </style>
+
+</head>
+<body>
+
+<div id="form_div">
+    <form id="myForm">
+        <div>
+            <label for="name">Name : </label>
+            <input type="text" id="name" name="name" required><br><br>
+        </div>
+
+        <div>
+            <label for="city">City &nbsp;&nbsp;: </label>
+            <input type="text" id="city" name="city" required><br><br>
+        </div>
+
+        <div>
+            <label for="email">Email  : </label>
+            <input type="email" id="email" name="email" required><br><br>
+        </div>
+
+        <div>
+            <label for="level">Level : </label>
+            <input type="text" id="level" name="level" required><br><br>
+        </div>
+
+        <div>
+            <input type="submit" value="Submit">&nbsp&nbsp;
+            <input type="reset" value="Reset">
+        </div>
+
+    </form>
+</div>
+
+<script>
+    document.getElementById("myForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get form data
+        const name = document.getElementById("name").value;
+        const city = document.getElementById("city").value;
+        const email = document.getElementById("email").value;
+        const level = document.getElementById("level").value;
+
+
+        const student = {
+            name: name,
+            city: city,
+            email: email,
+            level: level
+        };
+
+        console.log(JSON.stringify(student));
+
+        // Send POST request to the backend directly
+        fetch("http://localhost:8080/app2/student", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(student) // Ensure the data is sent as an object, not an array
+        })
+
+
+            .then(response => response.text())
+            .then(data => {
+                console.log(data); // Log the response from the server
+                // Perform any further actions as needed
+            })
+            .catch(error => {
+                console.log(error); // Log any errors that occurred
+            });
+
+        // Reset the form
+        document.getElementById("myForm").reset();
+    });
+</script>
+
+</body>
+</html>
