@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.*;
@@ -20,15 +23,25 @@ public class StudentFormServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
 
-        try {
-            Class.forName(getServletContext().getInitParameter("mysql-driver"));
-            String username = getServletContext().getInitParameter("db-user");
-            String password = getServletContext().getInitParameter("db-pw");
-            String url = getServletContext().getInitParameter("db-url");
-            this.connection = DriverManager.getConnection(url,username,password);
+//        try {
+//            Class.forName(getServletContext().getInitParameter("mysql-driver"));
+//            String username = getServletContext().getInitParameter("db-user");
+//            String password = getServletContext().getInitParameter("db-pw");
+//            String url = getServletContext().getInitParameter("db-url");
+//            this.connection = DriverManager.getConnection(url,username,password);
+//
+//        } catch (ClassNotFoundException | SQLException ex) {
+//            throw new RuntimeException(ex);
+//        }
 
-        } catch (ClassNotFoundException | SQLException ex) {
-            throw new RuntimeException(ex);
+        //hibernate ayata onnh
+        try{
+            InitialContext initialContext = new InitialContext();
+            DataSource pool = (DataSource) initialContext.lookup("java:comp/env/jdbc/studentDB");
+            this.connection = pool.getConnection();
+        }catch (NamingException | SQLException e){
+            System.out.println(e);
+            throw new RuntimeException(e);
         }
     }
 
